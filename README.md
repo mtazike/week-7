@@ -39,26 +39,6 @@ dependencies:
 
  ---
 
-My Summary
-This project focused on debugging, exception handling, and unit testing.
-I fixed issues in loader.py by adding proper indentation and try–except blocks to handle geocoding errors.
-
-The script now successfully creates a geo_data.csv file containing location, latitude, longitude, and type data.
-
-In test_loader.py, I implemented:
-  test_valid_locations() to confirm valid places return coordinates.
-  test_invalid_location() to confirm invalid names return empty values.
-
-All tests passed successfully, confirming the functions work as intended.
-
-Files Updated:
-  loader.py – Debugged and fixed.
-  test_loader.py – Added unit tests.
-  geo_data.csv – Output generated from the script.
-
-
-  ---
-
 ## 🧩 My Summary
 
 This week’s project focused on **debugging, exception handling, and unit testing**.
@@ -84,3 +64,13 @@ All tests ran successfully, confirming both functions work as intended.
 ### ✅ Result
 All tasks were completed successfully.  
 Both valid and invalid locations were handled properly, and all tests passed without errors.
+
+---
+
+## ▶️ How to Run
+
+### 1. Generate the Geocoded CSV File
+Run the following command to execute your main script:
+```bash
+python loader.py
+
