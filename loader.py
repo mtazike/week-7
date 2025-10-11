@@ -18,24 +18,52 @@ def get_geolocator(agent='h501-student'):
     return Nominatim(user_agent=agent)
 
 def fetch_location_data(geolocator, loc):
-    location = geolocator.geocode(loc)
+    try:
+        # Try to get the location (with a timeout)
+        location = geolocator.geocode(loc, timeout=10)
+    except Exception as e:
+        # Handle timeout or other errors safely
+        print(f"Error fetching location for '{loc}': {e}")
+        return {
+            "location": loc,
+            "latitude": None,
+            "longitude": None,
+            "type": "NA"
+        }
 
+    # If location not found
     if location is None:
-        return None
-    
-    return {"location": loc, "latitude": location.latitude, "longitude": location.longitude, "type": location.geo_type}
+        return {
+            "location": loc,
+            "latitude": None,
+            "longitude": None,
+            "type": "NA"
+        }
 
-def build_geo_dataframe(locations):
+    # If found, return coordinates
+    return {
+        "location": loc,
+        "latitude": location.latitude,
+        "longitude": location.longitude,
+        "type": location.raw.get("type", "NA")
+    }
+
+
+
+def build_geo_dataframe(geolocator, locations):
     geo_data = [fetch_location_data(geolocator, loc) for loc in locations]
-    
+
     return pd.DataFrame(geo_data)
 
 
 if __name__ == "__main__":
     geo = get_geolocator()
 
-    locations = ["Museum of Modern Art", "iuyt8765(*&)", "Alaska", "Franklin's Barbecue", "Burj Khalifa"]
+    locations = ["Museum of Modern Art", "Alaska", "Franklin's Barbecue", "Burj Khalifa"]
 
-    df = build_geo_dataframe(locations)
+    df = build_geo_dataframe(geo, locations)
+    print(df)
 
-    df.to_csv("./geo_data.csv")
+    df.to_csv("./geo_data.csv", index=False)
+    print("geo_data.csv file created successfully!")
+
