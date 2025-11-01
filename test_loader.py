@@ -1,23 +1,31 @@
 import unittest
-import pandas as pd
 from loader import *
 
 class TestLoader(unittest.TestCase):
 
     def test_valid_locations(self):
         geolocator = get_geolocator()
-        result = fetch_location_data(geolocator, "New York")
 
-        # Check that latitude and longitude are not None for a valid place
-        self.assertIsNotNone(result["latitude"], "Latitude should not be None for a valid location.")
-        self.assertIsNotNone(result["longitude"], "Longitude should not be None for a valid location.")
+        # Test Museum of Modern Art
+        result = fetch_location_data(geolocator, "Museum of Modern Art")
+        self.assertAlmostEqual(result["latitude"], 40.7618552, places=3)
+        self.assertAlmostEqual(result["longitude"], -73.9774838, places=3)
+        self.assertEqual(result["type"].lower(), "museum")
+
+        # Test USS Alabama Battleship Memorial Park
+        result2 = fetch_location_data(geolocator, "USS Alabama Battleship Memorial Park")
+        self.assertAlmostEqual(result2["latitude"], 30.684373, places=3)
+        self.assertAlmostEqual(result2["longitude"], -88.015316, places=3)
+        self.assertEqual(result2["type"].lower(), "park")
 
     def test_invalid_location(self):
         geolocator = get_geolocator()
         result = fetch_location_data(geolocator, "asdfqwer1234")
 
-        # Expect latitude to be None for an invalid location
-        self.assertIsNone(result["latitude"], "Latitude should be None for an invalid location.")
+        # Expect NA or None values for invalid location
+        self.assertIsNone(result["latitude"])
+        self.assertIsNone(result["longitude"])
+        self.assertEqual(result["type"], "NA")
 
 if __name__ == "__main__":
     unittest.main()
